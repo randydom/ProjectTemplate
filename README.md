@@ -1,5 +1,5 @@
 # ProjectTemplate (only for Berlin)
-[FMX] Template for crossplatform FMX project
+[FMX] Template for crossplatform FMX project. This template for begginer users (just like me)
 
 This is my template for FMX crossplatform projects.
 
