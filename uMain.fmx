@@ -1,0 +1,140 @@
+object fmMain: TfmMain
+  Left = 0
+  Top = 0
+  Caption = #1047#1072#1075#1086#1083#1086#1074#1086#1082' '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1103
+  ClientHeight = 480
+  ClientWidth = 320
+  Fill.Kind = Solid
+  Position = DesktopCenter
+  Quality = HighQuality
+  StyleBook = sbStyle
+  FormFactor.Width = 320
+  FormFactor.Height = 480
+  FormFactor.Devices = [Desktop]
+  OnCreate = FormCreate
+  OnResize = FormResize
+  OnShow = FormShow
+  DesignerMasterStyle = 3
+  object loAllForm: TLayout
+    Align = Client
+    Size.Width = 320.000000000000000000
+    Size.Height = 480.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 0
+    object loClient: TLayout
+      Align = Client
+      Size.Width = 320.000000000000000000
+      Size.Height = 480.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 0
+      object recToolbar: TRectangle
+        Align = Top
+        Fill.Color = xFF3A8ADF
+        Size.Width = 320.000000000000000000
+        Size.Height = 56.000000000000000000
+        Size.PlatformDefault = False
+        Stroke.Kind = None
+        object sbDetailsBack: TSpeedButton
+          Align = MostLeft
+          StyledSettings = [Family, Style]
+          Position.Y = 4.000000000000000000
+          Size.Width = 56.000000000000000000
+          Size.Height = 48.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.Font.Size = 18.000000000000000000
+          TextSettings.FontColor = claWhite
+          OnClick = sbDetailsBackClick
+        end
+        object lbHeader: TLabel
+          Align = Client
+          StyledSettings = [Family, Size, Style]
+          Locked = True
+          Margins.Left = 24.000000000000000000
+          Size.Width = 240.000000000000000000
+          Size.Height = 56.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.FontColor = claWhite
+          Text = #1047#1072#1075#1086#1083#1086#1074#1086#1082' '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1103
+        end
+      end
+      object seToolbarShadow: TShadowEffect
+        Distance = 1.000000000000000000
+        Direction = 90.000000000000000000
+        Softness = 0.300000011920929000
+        Opacity = 0.400000005960464500
+        ShadowColor = claBlack
+      end
+      object recStatusbar: TRectangle
+        Align = MostTop
+        Fill.Color = xFF3A8ADF
+        Size.Width = 320.000000000000000000
+        Size.Height = 50.000000000000000000
+        Size.PlatformDefault = False
+        Stroke.Kind = None
+        Visible = False
+      end
+    end
+    object mvSideMenu: TMultiView
+      TargetControl = loClient
+      Mode = Drawer
+      OnStartShowing = mvSideMenuStartShowing
+      OnHidden = mvSideMenuHidden
+      Size.Width = 250.000000000000000000
+      Size.Height = 480.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 1
+      object lvSideMenu: TListView
+        OnTap = lvSideMenuTap
+        ItemAppearanceClassName = 'TCustomizeItemObjects'
+        ItemEditAppearanceClassName = 'TCustomizeItemObjects'
+        HeaderAppearanceClassName = 'TListHeaderObjects'
+        FooterAppearanceClassName = 'TListHeaderObjects'
+        OnUpdatingObjects = lvSideMenuUpdatingObjects
+        ItemSpaces.Left = 0.000000000000000000
+        ItemSpaces.Right = 0.000000000000000000
+        Align = Client
+        Locked = True
+        Margins.Right = -1.000000000000000000
+        Size.Width = 250.000000000000000000
+        Size.Height = 480.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 0
+        OnApplyStyleLookup = lvSideMenuApplyStyleLookup
+        OnItemClick = lvSideMenuItemClick
+      end
+    end
+  end
+  object sbStyle: TStyleBook
+    Styles = <
+      item
+      end
+      item
+        Platform = 'Windows 10 Desktop'
+        ResourcesBin = {
+          464D585F5354594C4520322E3501060E4D756C7469566965777374796C6503E3
+          0000545046300A5452656374616E676C6500095374796C654E616D65060E4D75
+          6C7469566965777374796C6505416C69676E070643656E7465720A46696C6C2E
+          436F6C6F7207097846464630463046300748697454657374080A53697A652E57
+          696474680500000000000000FA06400B53697A652E4865696768740500000000
+          000000F007401453697A652E506C6174666F726D44656661756C74080B537472
+          6F6B652E4B696E6407044E6F6E65000C5442727573684F626A65637400095374
+          796C654E616D65060864726F706C696E650A42727573682E4B696E6407044E6F
+          6E65000000}
+      end
+      item
+        Platform = 'AndroidL Light'
+        ResourcesBin = {
+          464D585F5354594C4520322E3501060E4D756C7469566965777374796C6503E3
+          0000545046300A5452656374616E676C6500095374796C654E616D65060E4D75
+          6C7469566965777374796C6505416C69676E070643656E7465720A46696C6C2E
+          436F6C6F7207097846464545454545450748697454657374080A53697A652E57
+          696474680500000000000000FA06400B53697A652E4865696768740500000000
+          000000F007401453697A652E506C6174666F726D44656661756C74080B537472
+          6F6B652E4B696E6407044E6F6E65000C5442727573684F626A65637400095374
+          796C654E616D65060864726F706C696E650A42727573682E4B696E6407044E6F
+          6E65000000}
+      end>
+    Left = 232
+    Top = 156
+  end
+end
