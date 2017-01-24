@@ -14,7 +14,7 @@ object fmMain: TfmMain
   OnCreate = FormCreate
   OnResize = FormResize
   OnShow = FormShow
-  DesignerMasterStyle = 3
+  DesignerMasterStyle = 0
   object loAllForm: TLayout
     Align = Client
     Size.Width = 320.000000000000000000
@@ -35,11 +35,11 @@ object fmMain: TfmMain
         Size.PlatformDefault = False
         Stroke.Kind = None
         object sbDetailsBack: TSpeedButton
+          OnTap = sbDetailsBackTap
           Align = MostLeft
           StyledSettings = [Family, Style]
-          Position.Y = 4.000000000000000000
           Size.Width = 56.000000000000000000
-          Size.Height = 48.000000000000000000
+          Size.Height = 56.000000000000000000
           Size.PlatformDefault = False
           TextSettings.Font.Size = 18.000000000000000000
           TextSettings.FontColor = claWhite
@@ -82,6 +82,7 @@ object fmMain: TfmMain
       Size.Width = 250.000000000000000000
       Size.Height = 480.000000000000000000
       Size.PlatformDefault = False
+      Visible = False
       TabOrder = 1
       object lvSideMenu: TListView
         OnTap = lvSideMenuTap

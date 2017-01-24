@@ -122,7 +122,12 @@ begin
     Layout.EndUpdate;
     aRect := Layout.TextRect;
   finally
+    {$IF defined(MSWINDOWS)}
     FreeAndNil(Layout);
+    {$ELSEIF defined(ANDROID)}
+    Layout.DisposeOf;
+    Layout := nil;
+    {$ENDIF}
   end;
   Result := aRect.Bottom;
 end;
@@ -159,7 +164,12 @@ begin
     Layout.EndUpdate;
     aRect := Layout.TextRect;
   finally
+    {$IF defined(MSWINDOWS)}
     FreeAndNil(Layout);
+    {$ELSEIF defined(ANDROID)}
+    Layout.DisposeOf;
+    Layout := nil;
+    {$ENDIF}
   end;
   Result := aRect.Right;
 end;
@@ -195,7 +205,12 @@ begin
     Layout.EndUpdate;
     aRect := Layout.TextRect;
   finally
+    {$IF defined(MSWINDOWS)}
     FreeAndNil(Layout);
+    {$ELSEIF defined(ANDROID)}
+    Layout.DisposeOf;
+    Layout := nil;
+    {$ENDIF}
   end;
   Result := aRect.Bottom;
 end;
@@ -206,7 +221,7 @@ var
   i: Integer;
 begin
   i := LastDelimiter('/', aURL);
-  Result := Copy(aURL, i + 1, Length(aURL) - (i));
+  Result := Copy(aURL, i + 1, Length(aURL) - i);
 end;
 
 function InternetEnabled: Boolean;

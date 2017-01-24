@@ -38,10 +38,12 @@ type
     procedure mvSideMenuStartShowing(Sender: TObject);
     procedure mvSideMenuHidden(Sender: TObject);
     procedure lvSideMenuTap(Sender: TObject; const Point: TPointF);
+    procedure sbDetailsBackTap(Sender: TObject; const Point: TPointF);
   private
     { Private declarations }
     FSideMenuActivated: Integer; //Храним выбранный пункт бокового меню
     procedure CreateSideMenu;
+    procedure DoDetailsBack;
   public
     { Public declarations }
   end;
@@ -65,6 +67,7 @@ begin
   lvSideMenu.ShowScrollBar := False;
   {$IFDEF ANDROID}
   lvSideMenu.OnItemClick := nil;
+  sbDetailsBack.OnClick := nil;
   {$ENDIF}
   FSideMenuActivated := -1;
   {<}
@@ -85,21 +88,35 @@ var
   aItemImg: TListViewItem;
   i: Integer;
   ImgRes: TResourceStream;
+  ImageLoaded: Boolean;
 begin
   {> Загружаем изображение для меню}
-  ImgRes := TResourceStream.Create(HInstance, SideMenuHeaderResourceName +
-                                   Trunc(GetPrivedScale * 10).ToString, RT_RCDATA);
-  aItemImg := lvSideMenu.Items.Add;
-  aItemImg.Data[SideMenuHeaderIndicator] := True;
-  aItemImg.Bitmap.LoadFromStream(ImgRes);
-  aItemImg.Data[SideMenuHeaderTitle] := Caption;
-  lvSideMenu.Adapter.ResetView(aItemImg);
-  {$IF defined(MSWINDOWS)}
-  FreeAndNil(ImgRes);
-  {$ELSEIF defined(ANDROID)}
-  ImgRes.DisposeOf;
-  ImgRes := nil;
-  {$ENDIF}
+  try
+    ImageLoaded := True;
+    try
+      ImgRes := TResourceStream.Create(HInstance, SideMenuHeaderResourceName +
+                                       Trunc(GetPrivedScale * 10).ToString, RT_RCDATA);
+    except
+      ImageLoaded := False;
+    end;
+    aItemImg := lvSideMenu.Items.Add;
+    aItemImg.Data[SideMenuHeaderIndicator] := True;
+    if ImageLoaded then
+      try
+        aItemImg.Bitmap.LoadFromStream(ImgRes);
+      except
+        aItemImg.Bitmap := nil;
+      end;
+    aItemImg.Data[SideMenuHeaderTitle] := Caption;
+    lvSideMenu.Adapter.ResetView(aItemImg);
+  finally
+    {$IF defined(MSWINDOWS)}
+    FreeAndNil(ImgRes);
+    {$ELSEIF defined(ANDROID)}
+    ImgRes.DisposeOf;
+    ImgRes := nil;
+    {$ENDIF}
+  end;
   {<}
 
   {> Заполняем текстом и иконками}
@@ -115,8 +132,6 @@ begin
 end;
 
 procedure TfmMain.FormShow(Sender: TObject);
-var
-  SBHeight, NBHeight: Integer;
 begin
   {> При показе формы заполняем бокове меню дровера
      и прменяем цвета}
@@ -130,10 +145,9 @@ begin
   {<}
   {> Выводим Stausbar, если версия Android >= 5}
   {$IFDEF ANDROID}
-  if StrToInt(Copy(GetAndroidOSVersion, 1, 1)) >= 5 then
+  if TmyWindow.Init then
     begin
-      StatusBarGetBounds(SBHeight, NBHeight);
-      recStatusBar.Height := SBHeight;
+      recStatusBar.Height := TmyWindow.StatusBarHeight;
       recStatusBar.Visible := True;
       recStatusBar.BringToFront;
       recToolbar.BringToFront;
@@ -272,24 +286,36 @@ begin
   lvSideMenu.ScrollViewPos := 0;
 end;
 
-procedure TfmMain.sbDetailsBackClick(Sender: TObject);
+procedure TfmMain.DoDetailsBack;
 //Выполняем открытие/скрытие дровера или выполняем действия для кнопки "Назад"
 //Индикатором того, что нужно будет выполнять является свойство Tag у кнопки sbDetailsBack
 begin
   if sbDetailsBack.Tag = 0 then
-    begin
-      if mvSideMenu.IsShowed then
-        mvSideMenu.HideMaster
-      else
-        mvSideMenu.ShowMaster;
-    end
+  begin
+    if mvSideMenu.IsShowed then
+      mvSideMenu.HideMaster
+    else
+      mvSideMenu.ShowMaster;
+  end
   else
-    begin
-      {> Выполняем действия для кнопки "Назад"}
-      {<}
-      sbDetailsBack.Tag := 0;
-      sbDetailsBack.Text := fa_bars;
-    end;
+  begin
+    {> Выполняем действия для кнопки "Назад"}
+    {<}
+    sbDetailsBack.Tag := 0;
+    sbDetailsBack.Text := fa_bars;
+  end;
+end;
+
+procedure TfmMain.sbDetailsBackClick(Sender: TObject);
+//Обрабатываем нажатие на кнопку sbDetailsBack
+begin
+  DoDetailsBack;
+end;
+
+procedure TfmMain.sbDetailsBackTap(Sender: TObject; const Point: TPointF);
+//Обрабатываем нажатие на кнопку sbDetailsBack
+begin
+  DoDetailsBack;
 end;
 
 { TSpeedButton }
