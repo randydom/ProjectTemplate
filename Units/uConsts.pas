@@ -1,27 +1,27 @@
-unit uConsts;
+п»їunit uConsts;
 
 interface
 
 uses FontAwesome;
 
 const
-  {> Константы для бокового дровера}
+  {> РљРѕРЅСЃС‚Р°РЅС‚С‹ РґР»СЏ Р±РѕРєРѕРІРѕРіРѕ РґСЂРѕРІРµСЂР°}
   SideMenuHeaderResourceName = 'SIDEMENU_';
   SideMenuHeaderIndicator = 'header';
   SideMenuHeaderBackgroundImage = 'smBackgroundImage';
   SideMenuHeaderTitle = 'smHeaderTitle';
   SideMenuGlyph = 'smGlypth';
   SideMenuTitle = 'smTitile';
-  //Массив с иконками пунктов меню, берутся из FontAwesome}
+  //РњР°СЃСЃРёРІ СЃ РёРєРѕРЅРєР°РјРё РїСѓРЅРєС‚РѕРІ РјРµРЅСЋ, Р±РµСЂСѓС‚СЃСЏ РёР· FontAwesome}
   SideMenuGlyphsArray: array [0 .. 3] of string =
   (fa_book, fa_bell, fa_calendar, fa_info_circle);
-  //Массив с текстом пунктов меню}
+  //РњР°СЃСЃРёРІ СЃ С‚РµРєСЃС‚РѕРј РїСѓРЅРєС‚РѕРІ РјРµРЅСЋ}
   SideMenuTitlesArray: array [0 .. 3] of string =
-  ('Пункт меню #1', 'Пункт меню #2',
-   'Пункт меню #3', 'Пункт меню #4');
+  ('РџСѓРЅРєС‚ РјРµРЅСЋ #1', 'РџСѓРЅРєС‚ РјРµРЅСЋ #2',
+   'РџСѓРЅРєС‚ РјРµРЅСЋ #3', 'РџСѓРЅРєС‚ РјРµРЅСЋ #4');
   {<}
 
-  {> Цвета приложения}
+  {> Р¦РІРµС‚Р° РїСЂРёР»РѕР¶РµРЅРёСЏ}
   PrimaryColor = $FF3F51B5;
   LightPrimaryColor = $FFC5CAE9;
   DarkPrimaryColor = $FF303F9F;

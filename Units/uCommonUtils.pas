@@ -1,36 +1,36 @@
-unit uCommonUtils;
+п»їunit uCommonUtils;
 
 interface
 
 uses FMX.ListView.Types, FMX.Graphics, FMX.Controls, FMX.SearchBox;
 
   function GetScale: Single;
-  //Возвращает скэйл экрана
+  //Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃРєСЌР№Р» СЌРєСЂР°РЅР°
 
   function GetPrivedScale: Single;
-  //Возвращает "приведеный" скэйл
+  //Р’РѕР·РІСЂР°С‰Р°РµС‚ "РїСЂРёРІРµРґРµРЅС‹Р№" СЃРєСЌР№Р»
 
   function LVTextHeight(const AText: TListItemText): Single;
-  //Возвращает высоту текста
+  //Р’РѕР·РІСЂР°С‰Р°РµС‚ РІС‹СЃРѕС‚Сѓ С‚РµРєСЃС‚Р°
 
   function LVTextWidth(const AText: TListItemText): Single;
-  //Возвращает ширину текста
+  //Р’РѕР·РІСЂР°С‰Р°РµС‚ С€РёСЂРёРЅСѓ С‚РµРєСЃС‚Р°
 
   function TextHeight(const AText: string; aTextSettings: TTextSettings; const aWidth: Single): Single;
-  // Подсчет высоты текста на основе его ширины и настроек шрифта
+  // РџРѕРґСЃС‡РµС‚ РІС‹СЃРѕС‚С‹ С‚РµРєСЃС‚Р° РЅР° РѕСЃРЅРѕРІРµ РµРіРѕ С€РёСЂРёРЅС‹ Рё РЅР°СЃС‚СЂРѕРµРє С€СЂРёС„С‚Р°
 
   function FileNameFromURL(const aURL: string): string;
-  //Возвращает имя файла из URL
+  //Р’РѕР·РІСЂР°С‰Р°РµС‚ РёРјСЏ С„Р°Р№Р»Р° РёР· URL
 
   function InternetEnabled: Boolean;
-  //Проверка налиция интернета
+  //РџСЂРѕРІРµСЂРєР° РЅР°Р»РёС†РёСЏ РёРЅС‚РµСЂРЅРµС‚Р°
 
   function FindSearchBox(const ARootControl: TControl): TSearchBox;
-  //Нахождение и возвращение TSearchBox
+  //РќР°С…РѕР¶РґРµРЅРёРµ Рё РІРѕР·РІСЂР°С‰РµРЅРёРµ TSearchBox
 
   {$IFDEF ANDROID}
   function GetAndroidOSVersion: string;
-  //Номер версии Android-приложения
+  //РќРѕРјРµСЂ РІРµСЂСЃРёРё Android-РїСЂРёР»РѕР¶РµРЅРёСЏ
   {$ENDIF}
 
 
@@ -41,7 +41,7 @@ uses FMX.Platform, System.SysUtils, FMX.TextLayout, System.Math, System.Types,
      {$IFDEF ANDROID},  AndroidApi.JNI.OS, Androidapi.Helpers{$ENDIF};
 
 function FindSearchBox(const ARootControl: TControl): TSearchBox;
-//Нахождение и возвращение TSearchBox
+//РќР°С…РѕР¶РґРµРЅРёРµ Рё РІРѕР·РІСЂР°С‰РµРЅРёРµ TSearchBox
 var
   Child: TControl;
 begin
@@ -52,7 +52,7 @@ begin
 end;
 
 function GetScale: Single;
-//Возвращает скэйл экрана
+//Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃРєСЌР№Р» СЌРєСЂР°РЅР°
 var
   ScreenService: IFMXScreenService;
 begin
@@ -66,7 +66,7 @@ begin
 end;
 
 function GetPrivedScale: Single;
-//Возвращает "приведеный" скэйл
+//Р’РѕР·РІСЂР°С‰Р°РµС‚ "РїСЂРёРІРµРґРµРЅС‹Р№" СЃРєСЌР№Р»
 var
   r: Single;
 begin
@@ -91,7 +91,7 @@ begin
 end;
 
 function LVTextHeight(const AText: TListItemText): Single;
-//Возвращает высоту текста ЛВ
+//Р’РѕР·РІСЂР°С‰Р°РµС‚ РІС‹СЃРѕС‚Сѓ С‚РµРєСЃС‚Р° Р›Р’
 var
   Layout: TTextLayout;
   aRect: TRectF;
@@ -133,7 +133,7 @@ begin
 end;
 
 function LVTextWidth(const AText: TListItemText): Single;
-//Возвращает ширину текста ЛВ
+//Р’РѕР·РІСЂР°С‰Р°РµС‚ С€РёСЂРёРЅСѓ С‚РµРєСЃС‚Р° Р›Р’
 var
   Layout: TTextLayout;
   aRect: TRectF;
@@ -175,7 +175,7 @@ begin
 end;
 
 function TextHeight(const AText: string; aTextSettings: TTextSettings; const aWidth: Single): Single;
-// Подсчет высоты текста на основе его ширины и настроек шрифта
+// РџРѕРґСЃС‡РµС‚ РІС‹СЃРѕС‚С‹ С‚РµРєСЃС‚Р° РЅР° РѕСЃРЅРѕРІРµ РµРіРѕ С€РёСЂРёРЅС‹ Рё РЅР°СЃС‚СЂРѕРµРє С€СЂРёС„С‚Р°
 var
   Layout: TTextLayout;
   aRect: TRectF;
@@ -216,7 +216,7 @@ begin
 end;
 
 function FileNameFromURL(const aURL: string): string;
-//Возвращает имя файла из URL
+//Р’РѕР·РІСЂР°С‰Р°РµС‚ РёРјСЏ С„Р°Р№Р»Р° РёР· URL
 var
   i: Integer;
 begin
@@ -225,7 +225,7 @@ begin
 end;
 
 function InternetEnabled: Boolean;
-//Проверка налиция интернета
+//РџСЂРѕРІРµСЂРєР° РЅР°Р»РёС†РёСЏ РёРЅС‚РµСЂРЅРµС‚Р°
 var
   Resp: IHTTPResponse;
 begin
@@ -244,7 +244,7 @@ end;
 
 {$IFDEF ANDROID}
 function GetAndroidOSVersion: string;
-//Номер версии Android-приложения
+//РќРѕРјРµСЂ РІРµСЂСЃРёРё Android-РїСЂРёР»РѕР¶РµРЅРёСЏ
 begin
   Result := JStringToString(TJBuild_VERSION.JavaClass.release);
 end;

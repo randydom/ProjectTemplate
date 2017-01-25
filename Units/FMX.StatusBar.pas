@@ -1,4 +1,4 @@
-unit FMX.StatusBar;
+﻿unit FMX.StatusBar;
 
 interface
 

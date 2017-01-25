@@ -1,4 +1,4 @@
-unit uMain;
+Ôªøunit uMain;
 
 interface
 
@@ -41,7 +41,7 @@ type
     procedure sbDetailsBackTap(Sender: TObject; const Point: TPointF);
   private
     { Private declarations }
-    FSideMenuActivated: Integer; //’‡ÌËÏ ‚˚·‡ÌÌ˚È ÔÛÌÍÚ ·ÓÍÓ‚Ó„Ó ÏÂÌ˛
+    FSideMenuActivated: Integer; //–•—Ä–∞–Ω–∏–º –≤—ã–±—Ä–∞–Ω–Ω—ã–π –ø—É–Ω–∫—Ç –±–æ–∫–æ–≤–æ–≥–æ –º–µ–Ω—é
     procedure CreateSideMenu;
     procedure DoDetailsBack;
   public
@@ -60,7 +60,7 @@ uses uConsts, uCommonUtils, FontAwesome
 
 procedure TfmMain.FormCreate(Sender: TObject);
 begin
-  {> Õ‡ÒÚ‡Ë‚‡ÂÏ ·ÓÍÓ‚ÓÂ ÏÂÌ˛ ‰Ó‚Â‡}
+  {> –ù–∞—Å—Ç—Ä–∞–∏–≤–∞–µ–º –±–æ–∫–æ–≤–æ–µ –º–µ–Ω—é –¥—Ä–æ–≤–µ—Ä–∞}
   lvSideMenu.TransparentSeparators := True;
   if lvSideMenu.getAniCalc <> nil then
     lvSideMenu.getAniCalc.BoundsAnimation := False;
@@ -75,14 +75,23 @@ end;
 
 procedure TfmMain.FormResize(Sender: TObject);
 begin
-  {> »ÁÏÂÌˇÂÏ ¯ËËÌÛ ‰Ó‚Â‡ ‚ ÒÓÓÚ‚ÂÚÒÚ‚ËË Ò ÚÂ·Ó‚‡ÌËˇÏË}
+  {> –ò–∑–º–µ–Ω—è–µ–º —à–∏—Ä–∏–Ω—É –¥—Ä–æ–≤–µ—Ä–∞ –≤ —Å–æ–æ—Ç–≤–µ—Ç—Å—Ç–≤–∏–∏ —Å —Ç—Ä–µ–±–æ–≤–∞–Ω–∏—è–º–∏}
   if (Width >= 306) and (Width <= 480) then
     mvSideMenu.Width := Width - 56;
+  {<}
+
+  {> –í—ã–≤–æ–¥–∏–º Stausbar, –µ—Å–ª–∏ –≤–µ—Ä—Å–∏—è Android >= 5}
+  {$IFDEF ANDROID}
+  recStatusBar.Height := TmyWindow.StatusBarHeight;
+  recStatusBar.Visible := True;
+  recStatusBar.BringToFront;
+  recToolbar.BringToFront;
+  {$ENDIF}
   {<}
 end;
 
 procedure TfmMain.CreateSideMenu;
-//—ÓÁ‰‡ÂÏ ·ÓÍÓ‚ÓÂ ÏÂÌ˛ ‚ ‰Ó‚ÂÂ
+//–°–æ–∑–¥–∞–µ–º –±–æ–∫–æ–≤–æ–µ –º–µ–Ω—é –≤ –¥—Ä–æ–≤–µ—Ä–µ
 var
   aItem: TListViewItem;
   aItemImg: TListViewItem;
@@ -90,7 +99,7 @@ var
   ImgRes: TResourceStream;
   ImageLoaded: Boolean;
 begin
-  {> «‡„ÛÊ‡ÂÏ ËÁÓ·‡ÊÂÌËÂ ‰Îˇ ÏÂÌ˛}
+  {> –ó–∞–≥—Ä—É–∂–∞–µ–º –∏–∑–æ–±—Ä–∞–∂–µ–Ω–∏–µ –¥–ª—è –º–µ–Ω—é}
   try
     ImageLoaded := True;
     try
@@ -119,7 +128,7 @@ begin
   end;
   {<}
 
-  {> «‡ÔÓÎÌˇÂÏ ÚÂÍÒÚÓÏ Ë ËÍÓÌÍ‡ÏË}
+  {> –ó–∞–ø–æ–ª–Ω—è–µ–º —Ç–µ–∫—Å—Ç–æ–º –∏ –∏–∫–æ–Ω–∫–∞–º–∏}
   for i := Low(SideMenuGlyphsArray) to High(SideMenuGlyphsArray) do
     begin
       aItem := lvSideMenu.Items.Add;
@@ -133,31 +142,20 @@ end;
 
 procedure TfmMain.FormShow(Sender: TObject);
 begin
-  {> œË ÔÓÍ‡ÁÂ ÙÓÏ˚ Á‡ÔÓÎÌˇÂÏ ·ÓÍÓ‚Â ÏÂÌ˛ ‰Ó‚Â‡
-     Ë ÔÏÂÌˇÂÏ ˆ‚ÂÚ‡}
+  {> –ü—Ä–∏ –ø–æ–∫–∞–∑–µ —Ñ–æ—Ä–º—ã –∑–∞–ø–æ–ª–Ω—è–µ–º –±–æ–∫–æ–≤–µ –º–µ–Ω—é –¥—Ä–æ–≤–µ—Ä–∞
+     –∏ –ø—Ä–º–µ–Ω—è–µ–º —Ü–≤–µ—Ç–∞}
   CreateSideMenu;
   recStatusbar.Fill.Color := PrimaryColor;
   recToolbar.Fill.Color := PrimaryColor;
   {<}
-  {> œËÏÂÌˇÂÏ ¯ËÙÚ FontAwesome ‰Îˇ ÍÌÓÔÍË sbDetailsBack}
+  {> –ü—Ä–∏–º–µ–Ω—è–µ–º —à—Ä–∏—Ñ—Ç FontAwesome –¥–ª—è –∫–Ω–æ–ø–∫–∏ sbDetailsBack}
   FontAwesomeAssign(sbDetailsBack);
   sbDetailsBack.Text := fa_bars;
-  {<}
-  {> ¬˚‚Ó‰ËÏ Stausbar, ÂÒÎË ‚ÂÒËˇ Android >= 5}
-  {$IFDEF ANDROID}
-  if TmyWindow.Init then
-    begin
-      recStatusBar.Height := TmyWindow.StatusBarHeight;
-      recStatusBar.Visible := True;
-      recStatusBar.BringToFront;
-      recToolbar.BringToFront;
-    end;
-  {$ENDIF}
   {<}
 end;
 
 procedure TfmMain.lvSideMenuApplyStyleLookup(Sender: TObject);
-// œËÏÂÌˇÂÏ ÒÚËÎ¸ ‰Îˇ ·ÓÍÓ‚Ó„Ó ÏÂÌ˛
+// –ü—Ä–∏–º–µ–Ω—è–µ–º —Å—Ç–∏–ª—å –¥–ª—è –±–æ–∫–æ–≤–æ–≥–æ –º–µ–Ω—é
 begin
   lvSideMenu.SetColorItemFill(WhiteColor);
   lvSideMenu.SetColorItemSelected(LightPrimaryColor);
@@ -167,14 +165,14 @@ end;
 
 procedure TfmMain.lvSideMenuItemClick(const Sender: TObject;
   const AItem: TListViewItem);
-//Œ·‡·ÓÚ˜ËÍ Ì‡Ê‡ÚËˇ Ì‡ ÔÛÌÍÒÚ ·ÓÍÓ‚Ó„Ó ÏÂÌ˛
+//–û–±—Ä–∞–±–æ—Ç—á–∏–∫ –Ω–∞–∂–∞—Ç–∏—è –Ω–∞ –ø—É–Ω–∫—Å—Ç –±–æ–∫–æ–≤–æ–≥–æ –º–µ–Ω—é
 begin
   FSideMenuActivated := AItem.Index;
   mvSideMenu.HideMaster;
 end;
 
 procedure TfmMain.lvSideMenuTap(Sender: TObject; const Point: TPointF);
-// Œ·‡·ÓÚ˜ËÍ Ì‡Ê‡ÚËˇ Ì‡ ÔÛÌÍÒÚ ·ÓÍÓ‚Ó„Ó ÏÂÌ˛
+// –û–±—Ä–∞–±–æ—Ç—á–∏–∫ –Ω–∞–∂–∞—Ç–∏—è –Ω–∞ –ø—É–Ω–∫—Å—Ç –±–æ–∫–æ–≤–æ–≥–æ –º–µ–Ω—é
 var
   indx: Integer;
 begin
@@ -187,7 +185,7 @@ end;
 
 procedure TfmMain.lvSideMenuUpdatingObjects(const Sender: TObject;
   const AItem: TListViewItem; var AHandled: Boolean);
-// –‡ÒÒÚ‡‚ÎˇÂÏ ‚ÒÂ ˝ÎÂÏÂÌÚ˚ ‚ ·ÓÍÓ‚ÓÏ ÏÂÌ˛
+// –†–∞—Å—Å—Ç–∞–≤–ª—è–µ–º –≤—Å–µ —ç–ª–µ–º–µ–Ω—Ç—ã –≤ –±–æ–∫–æ–≤–æ–º –º–µ–Ω—é
 var
   aImg: TListItemImage;
   aGlyph: TListItemText;
@@ -267,28 +265,28 @@ begin
 end;
 
 procedure TfmMain.mvSideMenuHidden(Sender: TObject);
-//¬˚ÔÓÎˇÂÏ ‰ÂÈÒÚ‚Ëˇ ÔË ÒÍ˚ÚËË ‰Ó‚Â‡
-//ÂÒÎË ·˚Î ‚˚·‡Ì ÔÛÌÍÚ ÏÂÌ˛, ÚÓ ‚˚ÔÓÎÌˇÂÏ ÒÓÓÚ‚ÂÚÒÚ‚Û˛˘ÂÂ ‰ÂÈÒÚ‚ËÂ
+//–í—ã–ø–æ–ª—è–µ–º –¥–µ–π—Å—Ç–≤–∏—è –ø—Ä–∏ —Å–∫—Ä—ã—Ç–∏–∏ –¥—Ä–æ–≤–µ—Ä–∞
+//–µ—Å–ª–∏ –±—ã–ª –≤—ã–±—Ä–∞–Ω –ø—É–Ω–∫—Ç –º–µ–Ω—é, —Ç–æ –≤—ã–ø–æ–ª–Ω—è–µ–º —Å–æ–æ—Ç–≤–µ—Ç—Å—Ç–≤—É—é—â–µ–µ –¥–µ–π—Å—Ç–≤–∏–µ
 begin
   if FSideMenuActivated <= 0 then
     Exit;
-  {> ¬˚ÔÓÎÌˇÂÏ ÌÂÓ·ıÓ‰ËÏ˚Â ‰ÂÈÒÚ‚Ëˇ}
+  {> –í—ã–ø–æ–ª–Ω—è–µ–º –Ω–µ–æ–±—Ö–æ–¥–∏–º—ã–µ –¥–µ–π—Å—Ç–≤–∏—è}
   ShowMessage(lvSideMenu.Items[FSideMenuActivated].Data[SideMenuTitle].AsString);
   {<}
   FSideMenuActivated := -1;
 end;
 
 procedure TfmMain.mvSideMenuStartShowing(Sender: TObject);
-//¬˚ÔÓÎÌˇÂÏ ‰ÂÈÒÚ‚Ëˇ ÔÂÂ‰ ÔÓÍ‡ÁÓÏ ‰Ó‚Â‡:
-//Û·Ë‡ÂÏ ‚˚‰ÂÎÂÌËÂ Ë ÒÍÓÎÎËÏ Í ÔÂ‚ÓÏÛ ˝ÎÂÏÂÌÚÛ
+//–í—ã–ø–æ–ª–Ω—è–µ–º –¥–µ–π—Å—Ç–≤–∏—è –ø–µ—Ä–µ–¥ –ø–æ–∫–∞–∑–æ–º –¥—Ä–æ–≤–µ—Ä–∞:
+//—É–±–∏—Ä–∞–µ–º –≤—ã–¥–µ–ª–µ–Ω–∏–µ –∏ —Å–∫—Ä–æ–ª–ª–∏–º –∫ –ø–µ—Ä–≤–æ–º—É —ç–ª–µ–º–µ–Ω—Ç—É
 begin
   lvSideMenu.ItemIndex := -1;
   lvSideMenu.ScrollViewPos := 0;
 end;
 
 procedure TfmMain.DoDetailsBack;
-//¬˚ÔÓÎÌˇÂÏ ÓÚÍ˚ÚËÂ/ÒÍ˚ÚËÂ ‰Ó‚Â‡ ËÎË ‚˚ÔÓÎÌˇÂÏ ‰ÂÈÒÚ‚Ëˇ ‰Îˇ ÍÌÓÔÍË "Õ‡Á‡‰"
-//»Ì‰ËÍ‡ÚÓÓÏ ÚÓ„Ó, ˜ÚÓ ÌÛÊÌÓ ·Û‰ÂÚ ‚˚ÔÓÎÌˇÚ¸ ˇ‚ÎˇÂÚÒˇ Ò‚ÓÈÒÚ‚Ó Tag Û ÍÌÓÔÍË sbDetailsBack
+//–í—ã–ø–æ–ª–Ω—è–µ–º –æ—Ç–∫—Ä—ã—Ç–∏–µ/—Å–∫—Ä—ã—Ç–∏–µ –¥—Ä–æ–≤–µ—Ä–∞ –∏–ª–∏ –≤—ã–ø–æ–ª–Ω—è–µ–º –¥–µ–π—Å—Ç–≤–∏—è –¥–ª—è –∫–Ω–æ–ø–∫–∏ "–ù–∞–∑–∞–¥"
+//–ò–Ω–¥–∏–∫–∞—Ç–æ—Ä–æ–º —Ç–æ–≥–æ, —á—Ç–æ –Ω—É–∂–Ω–æ –±—É–¥–µ—Ç –≤—ã–ø–æ–ª–Ω—è—Ç—å —è–≤–ª—è–µ—Ç—Å—è —Å–≤–æ–π—Å—Ç–≤–æ Tag —É –∫–Ω–æ–ø–∫–∏ sbDetailsBack
 begin
   if sbDetailsBack.Tag = 0 then
   begin
@@ -299,7 +297,7 @@ begin
   end
   else
   begin
-    {> ¬˚ÔÓÎÌˇÂÏ ‰ÂÈÒÚ‚Ëˇ ‰Îˇ ÍÌÓÔÍË "Õ‡Á‡‰"}
+    {> –í—ã–ø–æ–ª–Ω—è–µ–º –¥–µ–π—Å—Ç–≤–∏—è –¥–ª—è –∫–Ω–æ–ø–∫–∏ "–ù–∞–∑–∞–¥"}
     {<}
     sbDetailsBack.Tag := 0;
     sbDetailsBack.Text := fa_bars;
@@ -307,13 +305,13 @@ begin
 end;
 
 procedure TfmMain.sbDetailsBackClick(Sender: TObject);
-//Œ·‡·‡Ú˚‚‡ÂÏ Ì‡Ê‡ÚËÂ Ì‡ ÍÌÓÔÍÛ sbDetailsBack
+//–û–±—Ä–∞–±–∞—Ç—ã–≤–∞–µ–º –Ω–∞–∂–∞—Ç–∏–µ –Ω–∞ –∫–Ω–æ–ø–∫—É sbDetailsBack
 begin
   DoDetailsBack;
 end;
 
 procedure TfmMain.sbDetailsBackTap(Sender: TObject; const Point: TPointF);
-//Œ·‡·‡Ú˚‚‡ÂÏ Ì‡Ê‡ÚËÂ Ì‡ ÍÌÓÔÍÛ sbDetailsBack
+//–û–±—Ä–∞–±–∞—Ç—ã–≤–∞–µ–º –Ω–∞–∂–∞—Ç–∏–µ –Ω–∞ –∫–Ω–æ–ø–∫—É sbDetailsBack
 begin
   DoDetailsBack;
 end;
@@ -324,5 +322,10 @@ procedure TSpeedButton.AdjustFixedSize(const Ref: TControl);
 begin
   SetAdjustType(TAdjustType.None);
 end;
+
+initialization
+  {$IFDEF ANDROID}
+  TmyWindow.Init;
+  {$ENDIF}
 
 end.
