@@ -4,6 +4,14 @@ interface
 
 uses FMX.ListView.Types, FMX.Graphics, FMX.Controls, FMX.SearchBox;
 
+{$IFDEF ANDROID}
+type
+  {$SCOPEDENUMS ON}
+  TDeviceType = (dpPhone, dpFablet, dpTablet);
+  //Тип для определения типа устройста: телефон, фаблеи, планшет
+  {$SCOPEDENUMS OFF}
+{$ENDIF}
+
   function GetScale: Single;
   //Возвращает скэйл экрана
 
@@ -31,6 +39,9 @@ uses FMX.ListView.Types, FMX.Graphics, FMX.Controls, FMX.SearchBox;
   {$IFDEF ANDROID}
   function GetAndroidOSVersion: string;
   //Номер версии Android-приложения
+
+  function GetDeviceType: TDeviceType;
+  //Возвращает тип устройства: телефон, фаблет, планшет
   {$ENDIF}
 
 
@@ -38,7 +49,8 @@ implementation
 
 uses FMX.Platform, System.SysUtils, FMX.TextLayout, System.Math, System.Types,
      FMX.Types, System.Net.HttpClient, System.Net.HttpClientComponent
-     {$IFDEF ANDROID},  AndroidApi.JNI.OS, Androidapi.Helpers{$ENDIF};
+     {$IFDEF ANDROID},  AndroidApi.JNI.OS, Androidapi.Helpers, FMX.BehaviorManager, FMX.Forms,
+     System.Devices{$ENDIF};
 
 function FindSearchBox(const ARootControl: TControl): TSearchBox;
 //Нахождение и возвращение TSearchBox
@@ -247,6 +259,46 @@ function GetAndroidOSVersion: string;
 //Номер версии Android-приложения
 begin
   Result := JStringToString(TJBuild_VERSION.JavaClass.release);
+end;
+
+function DefineDeviceClassByFormSize: TDeviceInfo.TDeviceClass;
+const
+  MaxPhoneWidth = 640;
+begin
+  if Screen.ActiveForm.Width <= MaxPhoneWidth then
+    Result := TDeviceInfo.TDeviceClass.Phone
+  else
+    Result := TDeviceInfo.TDeviceClass.Tablet;
+end;
+
+function IsDeviceType: TDeviceInfo.TDeviceClass;
+var
+  DeviceService: IDeviceBehavior;
+  Context: TFMXObject;
+begin
+  Context := Screen.ActiveForm;
+  if TBehaviorServices.Current.SupportsBehaviorService(IDeviceBehavior, DeviceService, Context) then
+    Result := DeviceService.GetDeviceClass(Context)
+  else
+    Result := DefineDeviceClassByFormSize;
+end;
+
+function GetDeviceType: TDeviceType;
+//Возвращает тип устройства: телефон, фаблет, планшет
+const
+  MinLogicaSizeForLargePhone = 736;
+var
+  ThisDevice: TDeviceInfo;
+begin
+  Result := TDeviceType.dpPhone;
+
+  if IsDeviceType = TDeviceInfo.TDeviceClass.Tablet then
+    Result := TDeviceType.dpTablet;
+
+  ThisDevice := TDeviceInfo.ThisDevice;
+  if ThisDevice <> nil then
+    if Max(ThisDevice.MinLogicalScreenSize.Width, ThisDevice.MinLogicalScreenSize.Height) >= MinLogicaSizeForLargePhone then
+      Result := TDeviceType.dpFablet;
 end;
 {$ENDIF}
 
