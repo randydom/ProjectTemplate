@@ -7,7 +7,7 @@ This template is using:
 - modernLV by Ravil Zaripov aka ![rzaripov1990] (https://github.com/rzaripov1990)
 - FMX.StatusBar by Ravil Zaripov aka ![rzaripov1990] (https://github.com/rzaripov1990)
 - FMX.FontAwesome by Ravil Zaripov aka ![rzaripov1990] (https://github.com/rzaripov1990)
-- FMX.DeviceInfo
+- FMX.DeviceInfo by Ravil Zaripov aka ![rzaripov1990] (https://github.com/rzaripov1990)
 
 ## Some screenshots
 ![windows] (Screenshots/windows.jpg)
