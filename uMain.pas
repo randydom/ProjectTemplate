@@ -3,7 +3,9 @@
 interface
 
 uses
-  System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants, FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs, FMX.Effects, FMX.StdCtrls, FMX.Objects, FMX.Layouts, FMX.Controls.Presentation, FMX.MultiView, FMX.ListView.Types, FMX.ListView.Appearances, FMX.ListView.Adapters.Base, FMX.ListView, uCommonUtils;
+  System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants, FMX.Types, FMX.Controls, FMX.Forms,
+  FMX.Graphics, FMX.Dialogs, FMX.Effects, FMX.StdCtrls, FMX.Objects, FMX.Layouts, FMX.Controls.Presentation,
+  FMX.MultiView, FMX.ListView.Types, FMX.ListView.Appearances, FMX.ListView, uCommonUtils, FMX.ListView.Adapters.Base;
 
 type
   TSpeedButton = class(FMX.StdCtrls.TSpeedButton)
@@ -32,6 +34,8 @@ type
     procedure mvSideMenuHidden(Sender: TObject);
     procedure sbDetailsBackTap(Sender: TObject; const Point: TPointF);
     procedure FormKeyUp(Sender: TObject; var Key: Word; var KeyChar: Char; Shift: TShiftState);
+    procedure mvSideMenuApplyStyleLookup(Sender: TObject);
+    procedure lvSideMenuScrollViewChange(Sender: TObject);
   private
     { Private declarations }
     {$IFDEF ANDROID}
@@ -53,7 +57,7 @@ implementation
 {$R *.fmx}
 
 uses
-  uConsts, FontAwesome {$IFDEF ANDROID}, FMX.StatusBar{$ENDIF};
+  uConsts, FontAwesome, System.Rtti {$IFDEF ANDROID}, FMX.StatusBar{$ENDIF};
 
 procedure TfmMain.FormCreate(Sender: TObject);
 begin
@@ -187,8 +191,6 @@ begin
 end;
 
 procedure TfmMain.FormShow(Sender: TObject);
-var
-  droplineBrush: TBrush;
 begin
   {$IFDEF ANDROID}
   {> Узнаем тип устройства}
@@ -211,11 +213,6 @@ begin
   {> Устанавливаем размер тени, равный скейлу устройства}
   seToolbarShadow.Distance := GetScale;
   {<}
-  {
-  droplineBrush := TBrush.Create(TBrushKind.Solid, TAlphaColorRec.Green);
-  mvSideMenu.StylesData['dropline.Brush'] := TValue.From<TBrush>(droplineBrush);
-  FreeAndNil(droplineBrush);
-  }
 end;
 
 procedure TfmMain.lvSideMenuApplyStyleLookup(Sender: TObject);
@@ -255,6 +252,13 @@ begin
     mvSideMenu.HideMaster;
 end;
 
+procedure TfmMain.lvSideMenuScrollViewChange(Sender: TObject);
+//Изменение высоты линии-границы бокового меню в режиме Panel
+begin
+  if (lnSideMenuVertLine.Visible) and Assigned(lvSideMenu.Items[0]) then
+    lnSideMenuVertLine.Margins.Top := lvSideMenu.getHeightByIndex(0) - lvSideMenu.ScrollViewPos;
+end;
+
 procedure TfmMain.lvSideMenuUpdatingObjects(const Sender: TObject; const AItem: TListViewItem; var AHandled: Boolean);
 // Расставляем все элементы в боковом меню
 var
@@ -275,6 +279,8 @@ begin
       aImg.ScalingMode := TImageScalingMode.Original;
       aImg.Bitmap := AItem.Bitmap;
       AItem.Height := 176;
+      if lnSideMenuVertLine.Visible then
+        lnSideMenuVertLine.Margins.Top := AItem.Height;
 
       aTitle := AItem.Objects.FindObjectT<TListItemText>(SideMenuHeaderTitle);
       if aTitle = nil then
@@ -336,6 +342,12 @@ begin
     end;
 
   AHandled := True;
+end;
+
+procedure TfmMain.mvSideMenuApplyStyleLookup(Sender: TObject);
+//Убираем стандарную линию-границу бокового меню
+begin
+  mvSideMenu.StylesData['dropline.Brush.Color'] := TValue.From<TAlphaColor>(TAlphaColorRec.Null);
 end;
 
 procedure TfmMain.mvSideMenuHidden(Sender: TObject);

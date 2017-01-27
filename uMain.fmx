@@ -79,6 +79,7 @@ object fmMain: TfmMain
     StyleLookup = 'mvNoDropline'
     Visible = False
     TabOrder = 1
+    OnApplyStyleLookup = mvSideMenuApplyStyleLookup
     object lvSideMenu: TListView
       ItemAppearanceClassName = 'TCustomizeItemObjects'
       ItemEditAppearanceClassName = 'TCustomizeItemObjects'
@@ -95,6 +96,7 @@ object fmMain: TfmMain
       Size.PlatformDefault = False
       TabOrder = 0
       OnApplyStyleLookup = lvSideMenuApplyStyleLookup
+      OnScrollViewChange = lvSideMenuScrollViewChange
       OnItemClick = lvSideMenuItemClick
       object lnSideMenuVertLine: TLine
         Align = Right
