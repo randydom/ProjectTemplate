@@ -97,7 +97,7 @@ object fmMain: TfmMain
         Distance = 1.000000000000000000
         Direction = 90.000000000000000000
         Softness = 0.300000011920929000
-        Opacity = 0.400000005960464400
+        Opacity = 0.400000005960464500
         ShadowColor = claBlack
       end
     end

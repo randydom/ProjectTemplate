@@ -7,7 +7,7 @@ uses FMX.ListView.Types, FMX.Graphics, FMX.Controls, FMX.SearchBox;
 {$IFDEF ANDROID}
 type
   {$SCOPEDENUMS ON}
-  TDeviceType = (dpPhone, dpFablet, dpTablet);
+  TDeviceType = (dtPhone, dtFablet, dtTablet);
   //Тип для определения типа устройста: телефон, фаблеи, планшет
   {$SCOPEDENUMS OFF}
 {$ENDIF}
@@ -290,15 +290,15 @@ const
 var
   ThisDevice: TDeviceInfo;
 begin
-  Result := TDeviceType.dpPhone;
+  Result := TDeviceType.dtPhone;
 
   if IsDeviceType = TDeviceInfo.TDeviceClass.Tablet then
-    Result := TDeviceType.dpTablet;
+    Result := TDeviceType.dtTablet;
 
   ThisDevice := TDeviceInfo.ThisDevice;
   if ThisDevice <> nil then
     if Max(ThisDevice.MinLogicalScreenSize.Width, ThisDevice.MinLogicalScreenSize.Height) >= MinLogicaSizeForLargePhone then
-      Result := TDeviceType.dpFablet;
+      Result := TDeviceType.dtFablet;
 end;
 {$ENDIF}
 

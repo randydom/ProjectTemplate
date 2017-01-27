@@ -75,7 +75,7 @@ procedure TfmMain.FormKeyUp(Sender: TObject; var Key: Word; var KeyChar: Char; S
 //Показываем или прячем боковое меню при нажатии на кнопку Menu телефона
 begin
   {$IFDEF ANDROID}
-  if (Key = vkMenu) and (FDeviceType = TDeviceType.dpPhone) then
+  if (Key = vkMenu) and (mvSideMenu.Mode = TMultiViewMode.Drawer) then
     if mvSideMenu.IsShowed then
       mvSideMenu.HideMaster
     else
@@ -87,13 +87,13 @@ procedure TfmMain.FormResize(Sender: TObject);
 begin
   {> Изменяем ширину дровера в соответствии с требованиями и типом устройства}
   {$IF defined(ANDROID)}
-  if FDeviceType = TDeviceType.dpPhone then
+  if FDeviceType = TDeviceType.dtPhone then
   begin
     mvSideMenu.Mode := TMultiViewMode.Drawer;
     if (Width >= 306) and (Width <= 480) then
       mvSideMenu.Width := Width - 56;
   end
-  else if (FDeviceType = TDeviceType.dpFablet) or (FDeviceType = TDeviceType.dpTablet) then
+  else if (FDeviceType = TDeviceType.dtFablet) or (FDeviceType = TDeviceType.dtTablet) then
   begin
     mvSideMenu.Mode := TMultiViewMode.Panel;
     mvSideMenu.Width := 320;
@@ -104,7 +104,18 @@ begin
 
   {$ELSEIF defined(MSWINDOWS)}
   if (Width >= 306) and (Width <= 480) then
-    mvSideMenu.Width := Width - 56;
+    begin
+      mvSideMenu.Mode := TMultiViewMode.Drawer;
+      sbDetailsBack.Visible := True;
+      mvSideMenu.Width := Width - 56;
+    end
+  else
+  if Width > 480 then
+    begin
+      mvSideMenu.Mode := TMultiViewMode.Panel;
+      sbDetailsBack.Visible := (sbDetailsBack.Tag <> 0);
+      mvSideMenu.Width := 424;
+    end;
   {$ENDIF}
   {<}
 
@@ -134,7 +145,7 @@ begin
   aItemImg := lvSideMenu.Items.Add;
   aItemImg.Data[SideMenuHeaderIndicator] := True;
   {$IFDEF ANDROID}
-  if FDeviceType = TDeviceType.dpPhone then
+  if FDeviceType = TDeviceType.dtPhone then
   {$ENDIF}
   try
     ImageLoaded := True;
@@ -212,31 +223,46 @@ begin
   if AItem.Index = 0 then
     begin
       lvSideMenu.ItemIndex := FSideMenuSelected;
-      {$IF defined(ANDROID)}
-      if FDeviceType = TDeviceType.dpPhone then
+      if mvSideMenu.Mode = TMultiViewMode.Drawer then
         mvSideMenu.HideMaster;
-      {$ELSEIF defided(MSWINDOWS)}
-      mvSideMenu.HideMaster;
-      {$ENDIF}
+      //{$IF defined(ANDROID)}
+      //if FDeviceType = TDeviceType.dtPhone then
+      //  mvSideMenu.HideMaster;
+      //{$ELSEIF defided(MSWINDOWS)}
+      //mvSideMenu.HideMaster;
+      //{$ENDIF}
       Exit;
     end
   else
     lvSideMenu.AllowSelection := True;
 
   FSideMenuSelected := AItem.Index;
-  {$IFDEF ANDROID}
-  if (FDeviceType = TDeviceType.dpFablet) or (FDeviceType = TDeviceType.dpTablet) then
-  begin
+  if mvSideMenu.Mode = TMultiViewMode.Panel then
+    begin
       {> Выполняем действие для выбранного итема}
-    if FSideMenuSelected = FSideMenuActivated then
-      Exit;
-    ShowMessage(lvSideMenu.Items[FSideMenuSelected].Data[SideMenuTitle].AsString);
-    FSideMenuActivated := FSideMenuSelected;
+      if FSideMenuSelected = FSideMenuActivated then
+        Exit;
+      ShowMessage(lvSideMenu.Items[FSideMenuSelected].Data[SideMenuTitle].AsString);
+      FSideMenuActivated := FSideMenuSelected;
       {<}
-  end
+    end
   else
-  {$ENDIF}
+  if mvSideMenu.Mode = TMultiViewMode.Drawer then
     mvSideMenu.HideMaster;
+
+  //{$IFDEF ANDROID}
+  //if (FDeviceType = TDeviceType.dtFablet) or (FDeviceType = TDeviceType.dtTablet) then
+  //begin
+  //    {> Выполняем действие для выбранного итема}
+  //  if FSideMenuSelected = FSideMenuActivated then
+  //    Exit;
+  //  ShowMessage(lvSideMenu.Items[FSideMenuSelected].Data[SideMenuTitle].AsString);
+  //  FSideMenuActivated := FSideMenuSelected;
+  //    {<}
+  //end
+  //else
+  //{$ENDIF}
+  //  mvSideMenu.HideMaster;
 end;
 
 procedure TfmMain.lvSideMenuUpdatingObjects(const Sender: TObject; const AItem: TListViewItem; var AHandled: Boolean);
@@ -357,10 +383,12 @@ begin
     {<}
     sbDetailsBack.Tag := 0;
     sbDetailsBack.Text := fa_bars;
-    {$IFDEF ANDROID}
-    if (FDeviceType = TDeviceType.dpFablet) or (FDeviceType = TDeviceType.dpTablet) then
+    if mvSideMenu.Mode = TMultiViewMode.Panel then
       sbDetailsBack.Visible := (sbDetailsBack.Tag <> 0);
-    {$ENDIF}
+    //{$IFDEF ANDROID}
+    //if (FDeviceType = TDeviceType.dtFablet) or (FDeviceType = TDeviceType.dtTablet) then
+    //  sbDetailsBack.Visible := (sbDetailsBack.Tag <> 0);
+    //{$ENDIF}
   end;
 end;
 
