@@ -7,7 +7,6 @@ object fmMain: TfmMain
   Fill.Kind = Solid
   Position = DesktopCenter
   Quality = HighQuality
-  StyleBook = sbStyle
   FormFactor.Width = 320
   FormFactor.Height = 480
   FormFactor.Devices = [Desktop]
@@ -16,39 +15,6 @@ object fmMain: TfmMain
   OnResize = FormResize
   OnShow = FormShow
   DesignerMasterStyle = 0
-  object sbStyle: TStyleBook
-    Styles = <
-      item
-      end
-      item
-        Platform = 'Windows 10 Desktop'
-        ResourcesBin = {
-          464D585F5354594C4520322E3501060E4D756C7469566965777374796C6503E3
-          0000545046300A5452656374616E676C6500095374796C654E616D65060E4D75
-          6C7469566965777374796C6505416C69676E070643656E7465720A46696C6C2E
-          436F6C6F7207097846464630463046300748697454657374080A53697A652E57
-          696474680500000000000000FA06400B53697A652E4865696768740500000000
-          000000F007401453697A652E506C6174666F726D44656661756C74080B537472
-          6F6B652E4B696E6407044E6F6E65000C5442727573684F626A65637400095374
-          796C654E616D65060864726F706C696E650A42727573682E4B696E6407044E6F
-          6E65000000}
-      end
-      item
-        Platform = 'AndroidL Light'
-        ResourcesBin = {
-          464D585F5354594C4520322E3501060E4D756C7469566965777374796C6503E3
-          0000545046300A5452656374616E676C6500095374796C654E616D65060E4D75
-          6C7469566965777374796C6505416C69676E070643656E7465720A46696C6C2E
-          436F6C6F7207097846464545454545450748697454657374080A53697A652E57
-          696474680500000000000000FA06400B53697A652E4865696768740500000000
-          000000F007401453697A652E506C6174666F726D44656661756C74080B537472
-          6F6B652E4B696E6407044E6F6E65000C5442727573684F626A65637400095374
-          796C654E616D65060864726F706C696E650A42727573682E4B696E6407044E6F
-          6E65000000}
-      end>
-    Left = 232
-    Top = 156
-  end
   object loClient: TLayout
     Align = Client
     Size.Width = 320.000000000000000000
@@ -97,7 +63,7 @@ object fmMain: TfmMain
         Distance = 1.000000000000000000
         Direction = 90.000000000000000000
         Softness = 0.300000011920929000
-        Opacity = 0.400000005960464500
+        Opacity = 0.300000011920929000
         ShadowColor = claBlack
       end
     end
@@ -110,6 +76,7 @@ object fmMain: TfmMain
     Size.Width = 250.000000000000000000
     Size.Height = 480.000000000000000000
     Size.PlatformDefault = False
+    StyleLookup = 'mvNoDropline'
     Visible = False
     TabOrder = 1
     object lvSideMenu: TListView
@@ -129,6 +96,16 @@ object fmMain: TfmMain
       TabOrder = 0
       OnApplyStyleLookup = lvSideMenuApplyStyleLookup
       OnItemClick = lvSideMenuItemClick
+      object lnSideMenuVertLine: TLine
+        Align = Right
+        LineType = Diagonal
+        Position.X = 249.000000000000000000
+        Size.Width = 1.000000000000000000
+        Size.Height = 480.000000000000000000
+        Size.PlatformDefault = False
+        Stroke.Color = xFFBABABA
+        Visible = False
+      end
     end
   end
 end

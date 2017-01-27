@@ -18,9 +18,9 @@ type
     sbDetailsBack: TSpeedButton;
     seToolbarShadow: TShadowEffect;
     lvSideMenu: TListView;
-    sbStyle: TStyleBook;
     lbHeader: TLabel;
     recStatusbar: TRectangle;
+    lnSideMenuVertLine: TLine;
     procedure lvSideMenuApplyStyleLookup(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -53,8 +53,7 @@ implementation
 {$R *.fmx}
 
 uses
-  uConsts, FontAwesome
-     {$IFDEF ANDROID}, FMX.StatusBar{$ENDIF};
+  uConsts, FontAwesome {$IFDEF ANDROID}, FMX.StatusBar{$ENDIF};
 
 procedure TfmMain.FormCreate(Sender: TObject);
 begin
@@ -88,31 +87,36 @@ begin
   {> Изменяем ширину дровера в соответствии с требованиями и типом устройства}
   {$IF defined(ANDROID)}
   if FDeviceType = TDeviceType.dtPhone then
-  begin
-    mvSideMenu.Mode := TMultiViewMode.Drawer;
-    if (Width >= 306) and (Width <= 480) then
-      mvSideMenu.Width := Width - 56;
-  end
-  else if (FDeviceType = TDeviceType.dtFablet) or (FDeviceType = TDeviceType.dtTablet) then
-  begin
-    mvSideMenu.Mode := TMultiViewMode.Panel;
-    mvSideMenu.Width := 320;
-    sbDetailsBack.Visible := (sbDetailsBack.Tag <> 0);
-    if Assigned(lvSideMenu.Items[0]) then
-      lvSideMenu.Items[0].Bitmap := nil;
-  end;
+    begin
+      if (Width >= 306) and (Width <= 480) then
+        mvSideMenu.Width := Width - 56;
+    end
+  else
+  if (FDeviceType = TDeviceType.dtFablet) or (FDeviceType = TDeviceType.dtTablet) then
+    begin
+      mvSideMenu.Mode := TMultiViewMode.Panel;
+      lnSideMenuVertLine.Visible := True;
+      if Assigned(lvSideMenu.Items[0]) then
+        lnSideMenuVertLine.Margins.Top := lvSideMenu.Items[0].Height;
+      mvSideMenu.Width := 320;
+      sbDetailsBack.Visible := (sbDetailsBack.Tag <> 0);
+    end;
 
   {$ELSEIF defined(MSWINDOWS)}
   if (Width >= 306) and (Width <= 480) then
     begin
       mvSideMenu.Mode := TMultiViewMode.Drawer;
+      lnSideMenuVertLine.Visible := False;
       sbDetailsBack.Visible := True;
       mvSideMenu.Width := Width - 56;
     end
   else
-  if Width > 480 then
+  if Width > 560 then
     begin
       mvSideMenu.Mode := TMultiViewMode.Panel;
+      if Assigned(lvSideMenu.Items[0]) then
+        lnSideMenuVertLine.Margins.Top := lvSideMenu.Items[0].Height;
+      lnSideMenuVertLine.Visible := True;
       sbDetailsBack.Visible := (sbDetailsBack.Tag <> 0);
       mvSideMenu.Width := 424;
     end;
@@ -144,9 +148,6 @@ begin
   {> Загружаем изображение для меню}
   aItemImg := lvSideMenu.Items.Add;
   aItemImg.Data[SideMenuHeaderIndicator] := True;
-  {$IFDEF ANDROID}
-  if FDeviceType = TDeviceType.dtPhone then
-  {$ENDIF}
   try
     ImageLoaded := True;
     try
@@ -155,18 +156,18 @@ begin
       ImageLoaded := False;
     end;
     if ImageLoaded then
-    try
-      aItemImg.Bitmap.LoadFromStream(ImgRes);
-    except
-      aItemImg.Bitmap := nil;
-    end;
+      try
+        aItemImg.Bitmap.LoadFromStream(ImgRes);
+      except
+        aItemImg.Bitmap := nil;
+      end;
   finally
-      {$IF defined(MSWINDOWS)}
+    {$IF defined(MSWINDOWS)}
     FreeAndNil(ImgRes);
-      {$ELSEIF defined(ANDROID)}
+    {$ELSEIF defined(ANDROID)}
     ImgRes.DisposeOf;
     ImgRes := nil;
-      {$ENDIF}
+    {$ENDIF}
   end;
   aItemImg.Data[SideMenuHeaderTitle] := Caption;
   lvSideMenu.Adapter.ResetView(aItemImg);
@@ -174,18 +175,20 @@ begin
 
   {> Заполняем текстом и иконками}
   for i := Low(SideMenuGlyphsArray) to High(SideMenuGlyphsArray) do
-  begin
-    aItem := lvSideMenu.Items.Add;
-    aItem.Data[SideMenuHeaderIndicator] := False;
-    aItem.Data[SideMenuGlyph] := SideMenuGlyphsArray[i];
-    aItem.Data[SideMenuTitle] := SideMenuTitlesArray[i];
-    lvSideMenu.Adapter.ResetView(aItem);
-  end;
+    begin
+      aItem := lvSideMenu.Items.Add;
+      aItem.Data[SideMenuHeaderIndicator] := False;
+      aItem.Data[SideMenuGlyph] := SideMenuGlyphsArray[i];
+      aItem.Data[SideMenuTitle] := SideMenuTitlesArray[i];
+      lvSideMenu.Adapter.ResetView(aItem);
+    end;
   {<}
   lvSideMenu.ItemIndex := FSideMenuActivated;
 end;
 
 procedure TfmMain.FormShow(Sender: TObject);
+var
+  droplineBrush: TBrush;
 begin
   {$IFDEF ANDROID}
   {> Узнаем тип устройства}
@@ -193,12 +196,13 @@ begin
   {<}
   {$ENDIF}
 
-  {> При показе формы заполняем бокове меню дровера
-     и прменяем цвета}
+  {> При показе формы заполняем бокове меню дровера и прменяем цвета}
   CreateSideMenu;
   recStatusbar.Fill.Color := PrimaryColor;
   recToolbar.Fill.Color := PrimaryColor;
+  lnSideMenuVertLine.Stroke.Color := DividerColor;
   {<}
+
   {> Применяем шрифт FontAwesome для кнопки sbDetailsBack}
   FontAwesomeAssign(sbDetailsBack);
   sbDetailsBack.Text := fa_bars;
@@ -207,6 +211,11 @@ begin
   {> Устанавливаем размер тени, равный скейлу устройства}
   seToolbarShadow.Distance := GetScale;
   {<}
+  {
+  droplineBrush := TBrush.Create(TBrushKind.Solid, TAlphaColorRec.Green);
+  mvSideMenu.StylesData['dropline.Brush'] := TValue.From<TBrush>(droplineBrush);
+  FreeAndNil(droplineBrush);
+  }
 end;
 
 procedure TfmMain.lvSideMenuApplyStyleLookup(Sender: TObject);
@@ -214,7 +223,8 @@ procedure TfmMain.lvSideMenuApplyStyleLookup(Sender: TObject);
 begin
   lvSideMenu.SetColorItemFill(WhiteColor);
   lvSideMenu.SetColorItemSelected(LightPrimaryColor);
-  lvSideMenu.SetColorHeader(PrimaryColor);
+  if Assigned(lvSideMenu.Items[0]) then
+    lvSideMenu.SetCustomColorForItem(0, PrimaryColor);
 end;
 
 procedure TfmMain.lvSideMenuItemClick(const Sender: TObject; const AItem: TListViewItem);
@@ -225,12 +235,6 @@ begin
       lvSideMenu.ItemIndex := FSideMenuSelected;
       if mvSideMenu.Mode = TMultiViewMode.Drawer then
         mvSideMenu.HideMaster;
-      //{$IF defined(ANDROID)}
-      //if FDeviceType = TDeviceType.dtPhone then
-      //  mvSideMenu.HideMaster;
-      //{$ELSEIF defided(MSWINDOWS)}
-      //mvSideMenu.HideMaster;
-      //{$ENDIF}
       Exit;
     end
   else
@@ -249,20 +253,6 @@ begin
   else
   if mvSideMenu.Mode = TMultiViewMode.Drawer then
     mvSideMenu.HideMaster;
-
-  //{$IFDEF ANDROID}
-  //if (FDeviceType = TDeviceType.dtFablet) or (FDeviceType = TDeviceType.dtTablet) then
-  //begin
-  //    {> Выполняем действие для выбранного итема}
-  //  if FSideMenuSelected = FSideMenuActivated then
-  //    Exit;
-  //  ShowMessage(lvSideMenu.Items[FSideMenuSelected].Data[SideMenuTitle].AsString);
-  //  FSideMenuActivated := FSideMenuSelected;
-  //    {<}
-  //end
-  //else
-  //{$ENDIF}
-  //  mvSideMenu.HideMaster;
 end;
 
 procedure TfmMain.lvSideMenuUpdatingObjects(const Sender: TObject; const AItem: TListViewItem; var AHandled: Boolean);
@@ -273,74 +263,77 @@ var
   aTitle: TListItemText;
 begin
   if AItem.Data[SideMenuHeaderIndicator].AsBoolean then
-  begin
-    aImg := AItem.Objects.FindObjectT<TListItemImage>(SideMenuHeaderBackgroundImage);
-    if aImg = nil then
-      aImg := TListItemImage.Create(AItem);
-    aImg.Name := SideMenuHeaderBackgroundImage;
-    aImg.PlaceOffset.X := 0;
-    aImg.PlaceOffset.Y := 0;
-    aImg.Width := lvSideMenu.Width;
-    aImg.Height := 176;
-    aImg.Bitmap := AItem.Bitmap;
-    aImg.ScalingMode := TImageScalingMode.Original;
-    AItem.Height := 176;
+    begin
+      aImg := AItem.Objects.FindObjectT<TListItemImage>(SideMenuHeaderBackgroundImage);
+      if aImg = nil then
+        aImg := TListItemImage.Create(AItem);
+      aImg.Name := SideMenuHeaderBackgroundImage;
+      aImg.PlaceOffset.X := 0;
+      aImg.PlaceOffset.Y := 0;
+      aImg.Width := lvSideMenu.Width;
+      aImg.Height := 176;
+      aImg.ScalingMode := TImageScalingMode.Original;
+      aImg.Bitmap := AItem.Bitmap;
+      AItem.Height := 176;
 
-    aTitle := AItem.Objects.FindObjectT<TListItemText>(SideMenuHeaderTitle);
-    if aTitle = nil then
-      aTitle := TListItemText.Create(AItem);
-    aTitle.Name := SideMenuHeaderTitle;
-    aTitle.TextAlign := TTextAlign.Leading;
-    aTitle.TextVertAlign := TTextAlign.Trailing;
-    aTitle.SelectedTextColor := WhiteColor;
-    aTitle.TextColor := WhiteColor;
-    aTitle.Font.Style := [TFontStyle.fsBold];
-    aTitle.Font.Size := 14;
-    aTitle.WordWrap := True;
-    aTitle.PlaceOffset.X := 24;
-    aTitle.PlaceOffset.Y := AItem.Height - 48;
-    aTitle.Width := lvSideMenu.Width - 48;
-    aTitle.Text := AItem.Data[SideMenuHeaderTitle].AsString;
-    aTitle.Height := 24;
-  end
+      aTitle := AItem.Objects.FindObjectT<TListItemText>(SideMenuHeaderTitle);
+      if aTitle = nil then
+        aTitle := TListItemText.Create(AItem);
+      aTitle.Name := SideMenuHeaderTitle;
+      aTitle.TextAlign := TTextAlign.Leading;
+      aTitle.TextVertAlign := TTextAlign.Trailing;
+      aTitle.SelectedTextColor := WhiteColor;
+      aTitle.TextColor := WhiteColor;
+      aTitle.Font.Style := [TFontStyle.fsBold];
+      aTitle.Font.Size := 14;
+      aTitle.WordWrap := True;
+      aTitle.PlaceOffset.X := 24;
+      aTitle.PlaceOffset.Y := AItem.Height - 48;
+      aTitle.Width := lvSideMenu.Width - 48;
+      aTitle.Height := 24;
+      if mvSideMenu.Mode = TMultiViewMode.Drawer then
+        aTitle.Text := AItem.Data[SideMenuHeaderTitle].AsString
+      else
+        aTitle.Text := '';
+    end
   else
-  begin
-    aGlyph := AItem.Objects.FindObjectT<TListItemText>(SideMenuGlyph);
-    if aGlyph = nil then
-      aGlyph := TListItemText.Create(AItem);
-    aGlyph.Name := SideMenuGlyph;
-    aGlyph.TextAlign := TTextAlign.Leading;
-    aGlyph.TextVertAlign := TTextAlign.Center;
-    aGlyph.SelectedTextColor := PrimaryColor;
-    aGlyph.TextColor := PrimaryColor;
-    aGlyph.Font.Family := FontAwesomeName;
-    aGlyph.Font.Style := [TFontStyle.fsBold];
-    aGlyph.Font.Size := 24;
-    aGlyph.WordWrap := True;
-    aGlyph.PlaceOffset.X := 24;
-    aGlyph.PlaceOffset.Y := 0;
-    aGlyph.Width := 48;
-    aGlyph.Text := AItem.Data[SideMenuGlyph].AsString;
-    aGlyph.Height := 60;
+    begin
+      aGlyph := AItem.Objects.FindObjectT<TListItemText>(SideMenuGlyph);
+      if aGlyph = nil then
+        aGlyph := TListItemText.Create(AItem);
+      aGlyph.Name := SideMenuGlyph;
+      aGlyph.TextAlign := TTextAlign.Leading;
+      aGlyph.TextVertAlign := TTextAlign.Center;
+      aGlyph.SelectedTextColor := PrimaryColor;
+      aGlyph.TextColor := PrimaryColor;
+      aGlyph.Font.Family := FontAwesomeName;
+      aGlyph.Font.Style := [TFontStyle.fsBold];
+      aGlyph.Font.Size := 24;
+      aGlyph.WordWrap := True;
+      aGlyph.PlaceOffset.X := 24;
+      aGlyph.PlaceOffset.Y := 0;
+      aGlyph.Width := 48;
+      aGlyph.Text := AItem.Data[SideMenuGlyph].AsString;
+      aGlyph.Height := 60;
 
-    aTitle := AItem.Objects.FindObjectT<TListItemText>(SideMenuTitle);
-    if aTitle = nil then
-      aTitle := TListItemText.Create(AItem);
-    aTitle.Name := SideMenuTitle;
-    aTitle.TextAlign := TTextAlign.Leading;
-    aTitle.TextVertAlign := TTextAlign.Center;
-    aTitle.SelectedTextColor := PrimaryTextColor;
-    aTitle.TextColor := PrimaryTextColor;
-    aTitle.Font.Style := [];
-    aTitle.Font.Size := 14;
-    aTitle.WordWrap := True;
-    aTitle.PlaceOffset.X := 72;
-    aTitle.PlaceOffset.Y := 0;
-    aTitle.Width := lvSideMenu.Width - 80;
-    aTitle.Text := AItem.Data[SideMenuTitle].AsString;
-    aTitle.Height := 60;
-    AItem.Height := 60;
-  end;
+      aTitle := AItem.Objects.FindObjectT<TListItemText>(SideMenuTitle);
+      if aTitle = nil then
+        aTitle := TListItemText.Create(AItem);
+      aTitle.Name := SideMenuTitle;
+      aTitle.TextAlign := TTextAlign.Leading;
+      aTitle.TextVertAlign := TTextAlign.Center;
+      aTitle.SelectedTextColor := PrimaryTextColor;
+      aTitle.TextColor := PrimaryTextColor;
+      aTitle.Font.Style := [];
+      aTitle.Font.Size := 14;
+      aTitle.WordWrap := True;
+      aTitle.PlaceOffset.X := 72;
+      aTitle.PlaceOffset.Y := 0;
+      aTitle.Width := lvSideMenu.Width - 80;
+      aTitle.Text := AItem.Data[SideMenuTitle].AsString;
+      aTitle.Height := 60;
+      AItem.Height := 60;
+    end;
 
   AHandled := True;
 end;
@@ -371,25 +364,21 @@ procedure TfmMain.DoDetailsBack;
 //Индикатором того, что нужно будет выполнять является свойство Tag у кнопки sbDetailsBack
 begin
   if sbDetailsBack.Tag = 0 then
-  begin
-    if mvSideMenu.IsShowed then
-      mvSideMenu.HideMaster
-    else
-      mvSideMenu.ShowMaster;
-  end
+    begin
+      if mvSideMenu.IsShowed then
+        mvSideMenu.HideMaster
+      else
+        mvSideMenu.ShowMaster;
+    end
   else
-  begin
-    {> Выполняем действия для кнопки "Назад"}
-    {<}
-    sbDetailsBack.Tag := 0;
-    sbDetailsBack.Text := fa_bars;
-    if mvSideMenu.Mode = TMultiViewMode.Panel then
-      sbDetailsBack.Visible := (sbDetailsBack.Tag <> 0);
-    //{$IFDEF ANDROID}
-    //if (FDeviceType = TDeviceType.dtFablet) or (FDeviceType = TDeviceType.dtTablet) then
-    //  sbDetailsBack.Visible := (sbDetailsBack.Tag <> 0);
-    //{$ENDIF}
-  end;
+    begin
+      {> Выполняем действия для кнопки "Назад"}
+      {<}
+      sbDetailsBack.Tag := 0;
+      sbDetailsBack.Text := fa_bars;
+      if mvSideMenu.Mode = TMultiViewMode.Panel then
+        sbDetailsBack.Visible := (sbDetailsBack.Tag <> 0);
+    end;
 end;
 
 procedure TfmMain.sbDetailsBackClick(Sender: TObject);
@@ -414,6 +403,7 @@ initialization
   {$IFDEF ANDROID}
   TmyWindow.Init;
   {$ENDIF}
+  //ReportMemoryLeaksOnShutdown := True;
 
 end.
 
