@@ -31,6 +31,7 @@ type
     procedure mvSideMenuStartShowing(Sender: TObject);
     procedure mvSideMenuHidden(Sender: TObject);
     procedure sbDetailsBackTap(Sender: TObject; const Point: TPointF);
+    procedure FormKeyUp(Sender: TObject; var Key: Word; var KeyChar: Char; Shift: TShiftState);
   private
     { Private declarations }
     {$IFDEF ANDROID}
@@ -70,6 +71,18 @@ begin
   {<}
 end;
 
+procedure TfmMain.FormKeyUp(Sender: TObject; var Key: Word; var KeyChar: Char; Shift: TShiftState);
+//Показываем или прячем боковое меню при нажатии на кнопку Menu телефона
+begin
+  {$IFDEF ANDROID}
+  if (Key = vkMenu) and (FDeviceType = TDeviceType.dpPhone) then
+    if mvSideMenu.IsShowed then
+      mvSideMenu.HideMaster
+    else
+      mvSideMenu.ShowMaster;
+  {$ENDIF}
+end;
+
 procedure TfmMain.FormResize(Sender: TObject);
 begin
   {> Изменяем ширину дровера в соответствии с требованиями и типом устройства}
@@ -97,10 +110,13 @@ begin
 
   {> Выводим Stausbar, если версия Android >= 5}
   {$IFDEF ANDROID}
-  recStatusBar.Height := TmyWindow.StatusBarHeight;
-  recStatusBar.Visible := True;
-  recStatusBar.BringToFront;
-  recToolbar.BringToFront;
+  if TOSVersion.Major >= 5 then
+    begin
+      recStatusBar.Height := TmyWindow.StatusBarHeight;
+      recStatusBar.Visible := True;
+      recToolbar.BringToFront;
+      recStatusBar.BringToFront;
+    end;
   {$ENDIF}
   {<}
 end;
@@ -175,6 +191,10 @@ begin
   {> Применяем шрифт FontAwesome для кнопки sbDetailsBack}
   FontAwesomeAssign(sbDetailsBack);
   sbDetailsBack.Text := fa_bars;
+  {<}
+
+  {> Устанавливаем размер тени, равный скейлу устройства}
+  seToolbarShadow.Distance := GetScale;
   {<}
 end;
 

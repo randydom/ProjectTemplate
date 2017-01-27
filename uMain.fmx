@@ -12,6 +12,7 @@ object fmMain: TfmMain
   FormFactor.Height = 480
   FormFactor.Devices = [Desktop]
   OnCreate = FormCreate
+  OnKeyUp = FormKeyUp
   OnResize = FormResize
   OnShow = FormShow
   DesignerMasterStyle = 0
@@ -47,35 +48,6 @@ object fmMain: TfmMain
       end>
     Left = 232
     Top = 156
-  end
-  object mvSideMenu: TMultiView
-    TargetControl = loClient
-    Mode = Drawer
-    OnStartShowing = mvSideMenuStartShowing
-    OnHidden = mvSideMenuHidden
-    Size.Width = 250.000000000000000000
-    Size.Height = 480.000000000000000000
-    Size.PlatformDefault = False
-    Visible = False
-    TabOrder = 1
-    object lvSideMenu: TListView
-      ItemAppearanceClassName = 'TCustomizeItemObjects'
-      ItemEditAppearanceClassName = 'TCustomizeItemObjects'
-      HeaderAppearanceClassName = 'TListHeaderObjects'
-      FooterAppearanceClassName = 'TListHeaderObjects'
-      OnUpdatingObjects = lvSideMenuUpdatingObjects
-      ItemSpaces.Left = 0.000000000000000000
-      ItemSpaces.Right = 0.000000000000000000
-      Align = Client
-      Locked = True
-      Margins.Right = -1.000000000000000000
-      Size.Width = 250.000000000000000000
-      Size.Height = 480.000000000000000000
-      Size.PlatformDefault = False
-      TabOrder = 0
-      OnApplyStyleLookup = lvSideMenuApplyStyleLookup
-      OnItemClick = lvSideMenuItemClick
-    end
   end
   object loClient: TLayout
     Align = Client
@@ -125,9 +97,38 @@ object fmMain: TfmMain
         Distance = 1.000000000000000000
         Direction = 90.000000000000000000
         Softness = 0.300000011920929000
-        Opacity = 0.400000005960464500
+        Opacity = 0.400000005960464400
         ShadowColor = claBlack
       end
+    end
+  end
+  object mvSideMenu: TMultiView
+    TargetControl = loClient
+    Mode = Drawer
+    OnStartShowing = mvSideMenuStartShowing
+    OnHidden = mvSideMenuHidden
+    Size.Width = 250.000000000000000000
+    Size.Height = 480.000000000000000000
+    Size.PlatformDefault = False
+    Visible = False
+    TabOrder = 1
+    object lvSideMenu: TListView
+      ItemAppearanceClassName = 'TCustomizeItemObjects'
+      ItemEditAppearanceClassName = 'TCustomizeItemObjects'
+      HeaderAppearanceClassName = 'TListHeaderObjects'
+      FooterAppearanceClassName = 'TListHeaderObjects'
+      OnUpdatingObjects = lvSideMenuUpdatingObjects
+      ItemSpaces.Left = 0.000000000000000000
+      ItemSpaces.Right = 0.000000000000000000
+      Align = Client
+      Locked = True
+      Margins.Right = -1.000000000000000000
+      Size.Width = 250.000000000000000000
+      Size.Height = 480.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 0
+      OnApplyStyleLookup = lvSideMenuApplyStyleLookup
+      OnItemClick = lvSideMenuItemClick
     end
   end
 end
