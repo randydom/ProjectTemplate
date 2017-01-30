@@ -30,7 +30,7 @@ type
   function FileNameFromURL(const aURL: string): string;
   //Возвращает имя файла из URL
 
-  function InternetEnabled: Boolean;
+  function IsInternetAvailable: Boolean;
   //Проверка налиция интернета
 
   function FindSearchBox(const ARootControl: TControl): TSearchBox;
@@ -236,7 +236,7 @@ begin
   Result := Copy(aURL, i + 1, Length(aURL) - i);
 end;
 
-function InternetEnabled: Boolean;
+function IsInternetAvailable: Boolean;
 //Проверка налиция интернета
 var
   Resp: IHTTPResponse;
